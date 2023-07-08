@@ -24,16 +24,69 @@ object FromXML {
       .option("inferSchema", "true")
       .option("rowTag", "Record")
       .option("rootTag", getRoot)
-      .xml("data/test.xml")
+      .xml("data/export.xml")
 
+    /*
     df.printSchema
+    root
+    |-- HeartRateVariabilityMetadataList: struct
+    (nullable = true)
+    | |-- InstantaneousBeatsPerMinute: array
+    (nullable = true)
+    | | |-- element: struct
+    (containsNull = true)
+    | | | |-- _VALUE: string
+    (nullable = true)
+    | | | |-- _bpm: long
+    (nullable = true)
+    | | | |-- _time: string
+    (nullable = true)
+    |-- MetadataEntry: array
+    (nullable = true)
+    | |-- element: struct
+    (containsNull = true)
+    | | |-- _VALUE: string
+    (nullable = true)
+    | | |-- _key: string
+    (nullable = true)
+    | | |-- _value: string
+    (nullable = true)
+    |-- _creationDate: string
+    (nullable = true)
+    |-- _device: string
+    (nullable = true)
+    |-- _endDate: string
+    (nullable = true)
+    |-- _sourceName: string
+    (nullable = true)
+    |-- _sourceVersion: string
+    (nullable = true)
+    |-- _startDate: string
+    (nullable = true)
+    |-- _type: string
+    (nullable = true)
+    |-- _unit: string
+    (nullable = true)
+    |-- _value: string
+    (nullable = true)
+    */
 
     df.createOrReplaceTempView("TestView")
-    val avgBMI = spark.sql("SELECT AVG(_value) " +
-      "FROM TestView WHERE _type = 'HKQuantityTypeIdentifierBodyMassIndex'")
+    val dfOut = spark.sql(
+      "SELECT _type as type, _unit as unit, " +
+      "AVG(_value) as value, date_format(_endDate, 'y-M') as month " +
+      "FROM TestView " +
+      "WHERE _type like 'HKQuantityTypeIdentifier%' " +
+      "GROUP BY date_format(_endDate, 'y-M'), _type, _unit " +
+      "ORDER BY date_format(_endDate, 'y-M') ASC"
+    )
 
-    val results = avgBMI.collect
-    results.foreach(println)
+    val Results = dfOut.collect
+
+    dfOut.printSchema
+    dfOut
+      .write
+      .json("data/healthkit_out.json")
 
     spark.stop
   }
