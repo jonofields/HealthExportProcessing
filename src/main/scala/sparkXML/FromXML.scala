@@ -3,15 +3,11 @@ package sparkXML
 import org.apache.spark.sql.SparkSession
 import org.apache.log4j._
 import com.databricks.spark.xml._
-import scala.xml
+
+import utils.Utility._
 
 object FromXML {
 
-  def getRoot: String = {
-    val xFile = xml.XML.loadFile("data/test.xml")
-    val root = xFile.head.label
-    root
-  }
   def main(args: Array[String]): Unit = {
     Logger.getLogger("org").setLevel(Level.ERROR)
     val spark = SparkSession
@@ -72,21 +68,15 @@ object FromXML {
     */
 
     df.createOrReplaceTempView("TestView")
-    val dfOut = spark.sql(
-      "SELECT _type as type, _unit as unit, " +
-      "AVG(_value) as value, date_format(_endDate, 'y-M') as month " +
-      "FROM TestView " +
-      "WHERE _type like 'HKQuantityTypeIdentifier%' " +
-      "GROUP BY date_format(_endDate, 'y-M'), _type, _unit " +
-      "ORDER BY date_format(_endDate, 'y-M') ASC"
-    )
+    val sqlFile = "sqlFiles/avg_by_month.sql"
+    val dfOut = spark.sql(readFile(sqlFile))
 
     val Results = dfOut.collect
 
     dfOut.printSchema
     dfOut
       .write
-      .json("data/healthkit_out.json")
+      .json("data/healthkitOut")
 
     spark.stop
   }
