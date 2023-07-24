@@ -16,8 +16,10 @@ ThisBuild / libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-streaming" % "3.0.0",
   "com.databricks" %% "spark-xml" % "0.16.0",
   "com.lightbend.akka" %% "akka-stream-alpakka-google-cloud-bigquery" % "6.0.1",
+  "com.lightbend.akka" %% "akka-stream-alpakka-google-common" % "6.0.1",
   "com.typesafe.akka" %% "akka-stream" % AkkaVersion,
   "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
   "com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion,
-  "com.typesafe.akka" %% "akka-http-jackson" % AkkaHttpVersion
+  "com.typesafe.akka" %% "akka-http-jackson" % AkkaHttpVersion,
+  "com.google.cloud" % "google-cloud-storage" % "2.24.0"
 )
