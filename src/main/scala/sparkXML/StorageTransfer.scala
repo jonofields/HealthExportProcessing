@@ -22,7 +22,7 @@ object StorageTransfer extends App {
     println(s"${filePath} has been written as ${`object`} to ${bucket}.")
   }
 
-  def writeHeathFiles(dirPath: String): List[String] = {
+  def getProcessedFiles(dirPath: String): List[String] = {
     val file = new File(dirPath)
     file.listFiles
       .filter(_.isFile)
@@ -30,7 +30,5 @@ object StorageTransfer extends App {
       .map(_.getPath).toList
   }
 
-  val fileList: List[String] = writeHeathFiles("/Users/jonofields/IdeaProjects/HealthExportProcessing/data/healthkitOut")
-  for (i <- fileList) uploadObject("pipeline-builds", "posted_json_test", i.split("/")(7), i)
 }
 
