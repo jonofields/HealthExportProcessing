@@ -1,9 +1,10 @@
-package sparkXML
+package utils
 
 import com.google.cloud.storage._
-import java.nio.file.Paths
+
 import java.io.File
-object StorageTransfer extends App {
+import java.nio.file.Paths
+object StorageTransfer {
   /*
   Transfers JSON files is Spark job is processed locally, exports XML file if
   Spark job is to be executed in DataProc

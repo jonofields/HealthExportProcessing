@@ -2,7 +2,7 @@ package sparkXML
 
 import spray.json.{DefaultJsonProtocol, JsString, JsNumber, JsValue, RootJsonFormat, deserializationError}
 /*
-WIP
+Loads JSON files into case class - Not necessary until Akka
  */
 object HealthKitProtocolJSON extends DefaultJsonProtocol {
   case class HealthKit(_type: String, unit: String, value: BigDecimal, month: String)

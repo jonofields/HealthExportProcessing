@@ -11,7 +11,7 @@ THEN AVG(_value) * 1000
 ELSE AVG(_value)
 END AS `value`,
 date_format(_endDate, 'y-M') as month
-FROM TestView
+FROM health_kit_data
 WHERE _type like 'HKQuantityTypeIdentifier%'
 GROUP BY date_format(_endDate, 'y-M'), _type, _unit
 ORDER BY date_format(_endDate, 'y-M') ASC

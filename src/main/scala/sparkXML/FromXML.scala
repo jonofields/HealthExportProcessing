@@ -5,8 +5,9 @@ import org.apache.log4j._
 import com.databricks.spark.xml._
 
 import utils.Utility._
+import utils.StorageTransfer._
 
-object FromXML {
+object FromXML extends GCSVariables {
 
   def main(args: Array[String]): Unit = {
     Logger.getLogger("org").setLevel(Level.ERROR)
@@ -67,17 +68,24 @@ object FromXML {
     (nullable = true)
     */
 
-    df.createOrReplaceTempView("TestView")
+    df.createOrReplaceTempView("health_kit_data")
     val sqlFile = "sqlFiles/avg_by_month.sql"
-    val dfOut = spark.sql(readFile(sqlFile))
+    val dfByMonth = spark.sql(readFile(sqlFile))
 
-    val Results = dfOut.collect
-
-    dfOut.printSchema
-    dfOut
+//    val Results = dfByMonth.collect
+    val avgPath = "data/healthkitOut/avg_by_month"
+    dfByMonth.printSchema
+    dfByMonth
       .write
-      .json("data/healthkitOut")
+      .json(s"$avgPath")
 
     spark.stop
+
+    val filesToWrite: List[String] = getProcessedFiles(avgPath)
+    for (file <- filesToWrite) uploadObject(project, bucket, file.split("/")(7), file)
+    /*
+    ^^^ Once there's more SQL files and results directories it may be cleanest
+    to also iterate through result paths
+     */
   }
 }
