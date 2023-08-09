@@ -21,5 +21,6 @@ ThisBuild / libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
   "com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion,
   "com.typesafe.akka" %% "akka-http-jackson" % AkkaHttpVersion,
-  "com.google.cloud" % "google-cloud-storage" % "2.24.0"
+  "com.google.cloud" % "google-cloud-storage" % "2.24.0",
+  "com.google.cloud" % "google-cloud-bigquery" % "2.31.0"
 )
