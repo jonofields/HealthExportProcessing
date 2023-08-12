@@ -1,7 +1,7 @@
 package utils
 import scala.io.Source._
 import scala.xml.XML
-object Utility {
+object SparkUtility {
   def readFile(file: String): String = {
     val source = fromFile(file)
     val avgSql = try source.mkString finally source.close()
